@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Helps the browser identify support for mobile applications -->
+    <meta charset="utf-8" />
+
+    <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width" />
+
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <!-- Title on the browser tab -->
+    <title>WebGIS</title>
+    <!-- Leaflet CSS Library -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
+    <!-- Leaflet JavaScript Library -->
+    <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
+    <!-- Style for the fullscreen map display -->
+    <style>
+      html,
+      body,
+      #map {
+        height: 100%;
+        width: 100%;
+        margin: 0px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- HTML Block to display the map -->
+    <div id="map"></div>
+    <script>
+      /* Initial Map */
+      //lat, long, zoom (the initial view can be determined from Google Earth)
+      var map = L.map("map").setView([-6.261373292525374, 106.81115364898358], 12);
+
+      /* Tile Basemap */
+      var basemap0 = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution: '&copy; <ahref="http://www.openstreetmap.org/copyright" >OpenStreetMap</a>',
+      });
+
+      var Esri_WorldImagery = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{ x } ", {
+        attribution: "Tiles &copy; Ali Akbar Q &mdash; 23611121 Statistics Program Study at Universitas Islam Indonesia",
+      });
+      var OpenTopoMap = L.tileLayer("https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png", {
+        maxZoom: 17,
+        attribution:
+          'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
+      });
+
+      Esri_WorldImagery.addTo(map); //Calls the basemap to be displayed when the page is loaded
+
+      /Control Layer/
+      var baseMaps = {
+        //yang kuning adalah nama yang muncul, yan putih adalah nama variabel/
+        "Open Street Map": basemap0,
+        "Open Topo Map": OpenTopoMap,
+        "Esri WorldImagery": Esri_WorldImagery,
+      };
+
+      var Layers = {};
+      var layerControl = L.control.layers(baseMaps, Layers, { collapsed: false });
+      layerControl.addTo(map);
+
+      // custom marker
+      var customIcon1 = L.icon({
+        iconUrl: "images/Pharmacy Location.png",
+        iconSize: [40, 40],
+      });
+
+      var markers = [
+  {
+    coordinates: [-6.260608599999999, 106.7953531],
+    name: "Apotek Hidup Baru",
+    address: "Jl. Hidup Baru No.15 9, RT.9/RW.6, Gandaria Utara, Kec. Kby. Baru, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12140, Indonesia",
+    phone: "+62 21 72786017"
+  },
+  {
+    coordinates: [-6.2835768, 106.7808547],
+    name: "Pharmacies Pondok Indah",
+    address: "Jalan Taman Duta 1, Kav 15-16 Pondok Indah Plaza 1 RT.4, RT.4/RW.14, Pd. Pinang, Kec. Kby. Lama, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12310, Indonesia",
+    phone: "+62 21 7657565"
+  },
+  {
+    coordinates: [-6.2755216, 106.8158513],
+    name: "Apotek PharmaPlus Kemang",
+    address: "Jl. Benda Raya No.17C, Cilandak Tim., Ps. Minggu, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12560, Indonesia",
+    phone: "+62 811-8115-779"
+  },
+  {
+    coordinates: [-6.291526699999999, 106.7877482],
+    name: "Klik Apotek",
+    address: "No.19, Jl. TB Simatupang No.7, RT.9/RW.6, West Cilandak, Cilandak, South Jakarta City, Jakarta 12430, Indonesia",
+    phone: "+62 800 1200888"
+  },
+  {
+    coordinates: [-6.2776137, 106.8022764],
+    name: "Watsons Apotek",
+    address: "Jl. Cipete Raya No.18 2, RT.6/RW.4, Cipete Sel., Kec. Cilandak, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12410, Indonesia",
+    phone: null
+  },
+  {
+    coordinates: [-6.296891899999999, 106.7948629],
+    name: "Aji Waras Fatmawati",
+    address: "PQ3V+6WX, Jl. RS. Fatmawati Raya, RT.4/RW.4, Cilandak Bar., Kec. Cilandak, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12430, Indonesia",
+    phone: "+62 21 7519306"
+  },
+  {
+    coordinates: [-6.3026729, 106.8144738],
+    name: "Apotek K-24 Cilandak KKO Jakarta Selatan",
+    address: "Jl. Raya Cilandak KKO No.8, RT.1/RW.8, Ragunan, Ps. Minggu, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12550, Indonesia",
+    phone: "+62 812-8776-6285"
+  },
+  {
+    coordinates: [-6.297752, 106.8153608],
+    name: "Aji Waras Apotik",
+    address: "Jl. Raya Cilandak KKO Raya No.45 6, RT.6/RW.5, Ragunan, Ps. Minggu, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12550, Indonesia",
+    phone: "+62 21 7806089"
+  },
+  {
+    coordinates: [-6.255764599999999, 106.7904034],
+    name: "Apotek, Laboratorium Medis, dan Klinik Kimia Farma 47 Premier Radio Dalam",
+    address: "Jl. Radio Dalam Raya No.1, Gandaria Utara, Kec. Kby. Baru, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12140, Indonesia",
+    phone: "+62 811-1067-8579"
+  },
+  {
+    coordinates: [-6.3016744, 106.7955432],
+    name: "Apotek Kimia Farma Cilandak",
+    address: "Jl. Wijaya Kusuma No.2, Cilandak Bar., Kec. Cilandak, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12430, Indonesia",
+    phone: "+62 821-2597-3747"
+  },
+  {
+    coordinates: [-6.2775099, 106.8001936],
+    name: "Apotik Cipete Raya",
+    address: "Jl. Cipete Raya No.2, RT.2/RW.4, Cipete Sel., Kec. Cilandak, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12410, Indonesia",
+    phone: "+62 21 7665332"
+  },
+  {
+    coordinates: [-6.2801464, 106.799749],
+    name: "Apotik Gaharu",
+    address: "1A, Jl. Gaharu II No.1A, RT.10/RW.11, Cilandak Bar., Kec. Cilandak, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12430, Indonesia",
+    phone: "+62 21 75913384"
+  },
+  {
+    coordinates: [-6.277723700000001, 106.7994384],
+    name: "Apotek K-24 Cipete Jakarta Selatan",
+    address: "Jl. Cipete Raya No.55 6, RT.6/RW.4, Cipete Sel., Kec. Cilandak, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12410, Indonesia",
+    phone: "+62 21 75916136"
+  },
+  {
+    coordinates: [-6.2817818, 106.7936692],
+    name: "Apotek Terogong",
+    address: "Jl. Terogong Raya No. 18, RT.6/RW.10, Cilandak Barat, Cilandak, RT.6/RW.10, Cilandak Bar., Kec. Cilandak, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12430, Indonesia",
+    phone: "+62 21 7657487"
+  },
+  {
+    coordinates: [-6.2779567, 106.806357],
+    name: "Aji Waras Cipete",
+    address: "Jl. Cipete Raya No.76c, RT.7/RW.1, Kemang, Cipete Sel., Kec. Cilandak, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12410, Indonesia",
+    phone: "+62 815-8299-904"
+  },
+  {
+    coordinates: [-6.2949413, 106.794673],
+    name: "Apotik Melawai 9",
+    address: "Jl. RS. Fatmawati Raya No.37, RT.1/RW.4, Cilandak Bar., Kec. Cilandak, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12430, Indonesia",
+    phone: "+62 815-8412-4409"
+  },
+  {
+    coordinates: [-6.2810786, 106.7919131],
+    name: "Apotek Bahari Raya",
+    address: "Jl.Terogong III No.75 A, RT.10/RW.10, Cilandak Bar., Kec. Cilandak, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12420, Indonesia",
+    phone: "+62 812-1234-3936"
+  },
+  {
+    coordinates: [-6.277191300000001, 106.7984164],
+    name: "CENTURY Puri Mutiara",
+    address: "Jl. Cipete Raya No.3 7, RT.6/RW.3, Cipete Sel., Kec. Cilandak, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12410, Indonesia",
+    phone: "+62 21 29235391"
+  },
+  {
+    coordinates: [-6.2843201, 106.8075057],
+    name: "Ajiwaras Antasari",
+    address: "Jl. Pangeran Antasari No.76, Cilandak Bar., Kec. Cilandak, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12430, Indonesia",
+    phone: "+62 21 7697338"
+  },
+  {
+    coordinates: [-6.2781324, 106.7816065],
+    name: "Apotek K-24 Pondok Indah Jakarta Selatan",
+    address: "Jl. Metro Pondok Indah No.25 Blok SG, RT.2/RW.15, Pd. Pinang, Kec. Kby. Lama, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12310, Indonesia",
+    phone: "+62 811-9881-830"
+  },
+  {
+    coordinates: [-6.288242699999999, 106.7946268],
+    name: "Apotek Century South Quarter",
+    address: "Jl. RS. Fatmawati Raya No.14 3, RT.3/RW.5, Lb. Bulus, Kec. Cilandak, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12430, Indonesia",
+    phone: null
+  },
+  {
+    coordinates: [-6.2365062, 106.7976958],
+    name: "Apotek K-24 Hang Tuah Jakarta Selatan",
+    address: "Jl. Hang Tuah Raya No.59, Gunung, Kec. Kby. Baru, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12120, Indonesia",
+    phone: "+62 858-8115-4668"
+  },
+  {
+    coordinates: [-6.2439528, 106.7982959],
+    name: "Apotek dan Klinik Kimia Farma Blok M",
+    address: "Jl. Sultan Hasanuddin Dalam No.1, RT.3/RW.1, Melawai, Kec. Kby. Baru, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12160, Indonesia",
+    phone: "+62 821-1113-7613"
+  },
+  {
+    coordinates: [-6.2542162, 106.7947934],
+    name: "Apotik Medical Farma",
+    address: "Jalan Petogogan II Blok A No.36A, RT.9/RW.5, Pulo, Kebayoran Baru, RT.9/RW.5, Pulo, Kec. Kby. Baru, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12170, Indonesia",
+    phone: "+62 21 7394212"
+  },
+  {
+    coordinates: [-6.276886599999999, 106.7968086],
+    name: "Apotik Asy Syifa",
+    address: "JL. RS. Fatmawati, No. 43, Pondok Labu, RT.8/RW.6, Gandaria Sel., Kec. Cilandak, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12430, Indonesia",
+    phone: "+62 21 75912410"
+  },
+  {
+    coordinates: [-6.2642723, 106.7933879],
+    name: "Apotek Perdana Medika",
+    address: "Jl. H. Nawi Raya No.46B, Gandaria Sel., Kec. Cilandak, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12420, Indonesia",
+    phone: null
+  },
+  {
+    coordinates: [-6.2704248, 106.8102313],
+    name: "Apotek Abu Farma",
+    address: "Jl. H. Abu No.23A, RT.3/RW.7, Cipete Sel., Kec. Cilandak, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12410, Indonesia",
+    phone: "+62 21 7654481"
+  },
+  {
+    coordinates: [-6.3117205, 106.7934156],
+    name: "Apotek Roxy Pondok Labu",
+    address: "Jl. RS. Fatmawati Raya No.55, Pd. Labu, Kec. Cilandak, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12450, Indonesia",
+    phone: "+62 811-2850-0150"
+  },
+  {
+    coordinates: [-6.301263899999999, 106.7946053],
+    name: "Apotek Sanafarma-Klinik Bhakti Medika Sejahtera Fatmawati",
+    address: "8, Jl. RS. Fatmawati Raya No.134, RT.8/RW.4, Cilandak Bar., Kec. Cilandak, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12430, Indonesia",
+    phone: "+62 21 75907803"
+  },
+  {
+    coordinates: [-6.247838499999999, 106.8193746],
+    name: "Apotek K24 Bangka Raya Jakarta Selatan",
+    address: "Jl. Bangka IIG No.40D 14, RT.14/RW.3, Pela Mampang, Kec. Mampang Prpt., Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12720, Indonesia",
+    phone: "+62 21 7198041"
+  }
+];
+
+
+markers.forEach(function(markerData) {
+  var marker = L.marker(markerData.coordinates, { icon: customIcon1 });
+  marker.bindPopup("<b>" + markerData.name + "</b><br>" + markerData.address + (markerData.phone ? "<br>Phone: " + markerData.phone : ""));
+  marker.addTo(map);
+  marker.bindTooltip("<b>" + markerData.name + "</b>");
+});
+    </script>
+  </body>
+</html>
